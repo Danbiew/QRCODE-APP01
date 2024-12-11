@@ -45,17 +45,18 @@ def main():
                 # Generate QR Code
                 qr_image = generate_qr_code(qr_content, box_size, border_size)
                 
+                # Convert PIL Image to bytes
+                img_byte_arr = io.BytesIO()
+                qr_image.save(img_byte_arr, format='PNG')
+                img_byte_arr = img_byte_arr.getvalue()
+                
                 # Display QR Code
-                st.image(qr_image, caption="Generated QR Code", use_column_width=True)
+                st.image(img_byte_arr, caption="Generated QR Code", use_container_width=True)
                 
                 # Download option
-                buffered = io.BytesIO()
-                qr_image.save(buffered, format="PNG")
-                qr_bytes = buffered.getvalue()
-                
                 st.download_button(
                     label="Download QR Code",
-                    data=qr_bytes,
+                    data=img_byte_arr,
                     file_name="qr_code.png",
                     mime="image/png"
                 )
